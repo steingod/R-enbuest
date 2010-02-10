@@ -29,7 +29,7 @@
 # NA
 #
 # CVS_ID:
-# $Id: aveobsdepth.R,v 1.1 2010-02-09 16:55:37 steingod Exp $
+# $Id: aveobsdepth.R,v 1.2 2010-02-10 09:27:52 steingod Exp $
 #  
 
 aveobsdepth <- function(x,depth,method="extract") {
@@ -44,19 +44,26 @@ aveobsdepth <- function(x,depth,method="extract") {
 		    temperature=x$data$temperature[x$data$depth==depth],
 		    salinity=x$data$salinity[x$data$depth==depth]
 		    ))
-    } else if (method="mean") {
-	t <- list(info=paste(x$info,"Weighted average until depth", depth),
-		data=data.frame(
-		    time=x$data$time[x$data$depth<=depth],
-		    latitude=x$data$latitude[x$data$depth<=depth],
-		    longitude=x$data$longitude[x$data$depth<=depth],
-		    depth=x$data$depth[x$data$depth<=depth],
-		    temperature=x$data$temperature[x$data$depth<=depth],
-		    salinity=x$data$salinity[x$data$depth<=depth]
-		    ))
-	myindex <- format(t$data$time,"%Y%m%d","GMT")
+    } else if (method=="mean") {
+##	t <- list(info=paste(x$info,"Weighted average until depth", depth),
+##		data=data.frame(
+##		    time=x$data$time[x$data$depth<=depth],
+##		    latitude=x$data$latitude[x$data$depth<=depth],
+##		    longitude=x$data$longitude[x$data$depth<=depth],
+##		    depth=x$data$depth[x$data$depth<=depth],
+##		    temperature=x$data$temperature[x$data$depth<=depth],
+##		    salinity=x$data$salinity[x$data$depth<=depth]
+##		    ))
+##	myindex <- factor(format(t$data$time,"%Y%m%d","GMT"))
+##	maxdepth <- tapply(t$data$depth,myindex,max,na.rm=T)
+##	mindepth <- tapply(t$data$depth,myindex,minna.rm=T)
+##	ndepths <- tapply(t$data$depth,myindex,length)
 
-    monthlyssi <- tapply(x$shortwave,myindex,mean,na.rm=T)
+	t <- x
+	x <- t$data[do.call(order,t$data[,c("time","depth")]),]
+	tmp <- by(t$data[,c("temperature","depth")], t$data$time, function(u) weighted.mean((u$temperature[-1]+u$temperature[-nrow(u)])/2, w=diff(u$depth)/depth, na.rm=TRUE))
+	return(tmp)
+
 	
     } else {
 	return(NULL)
