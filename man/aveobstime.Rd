@@ -1,6 +1,6 @@
-\name{aveobs}
+\name{aveobstime}
 
-\alias{aveobs}
+\alias{aveobstime}
 
 \title{
     Estimate an average value
@@ -12,7 +12,7 @@
 }
 
 \usage{
-    tmp <- aveobs(time, values, period="month")
+    tmp <- aveobstime(time, values, period="month")
 }
 
 \arguments{
