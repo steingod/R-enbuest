@@ -29,7 +29,7 @@
 # NA
 #
 # CVS_ID:
-# $Id: aveobsdepth.R,v 1.5 2010-02-19 12:16:50 steingod Exp $
+# $Id: aveobsdepth.R,v 1.6 2010-02-19 12:52:36 steingod Exp $
 #  
 
 aveobsdepth <- function(x,depth,numz=5,method="extract") {
@@ -86,6 +86,7 @@ aveobsdepth <- function(x,depth,numz=5,method="extract") {
 
 	# Prepare for export
 	mytime <- strptime(names(tmp3),"%Y%m%d","GMT")
+	attributes(tmp3) <- NULL
 	mytemp <- unlist(tmp3,use.names=F)
 
 	# Prepare object to return
@@ -93,7 +94,7 @@ aveobsdepth <- function(x,depth,numz=5,method="extract") {
 		    "Weighted depth average over uppermost", depth,"m"),
 		data=data.frame(time=mytime,temperature=mytemp))
     } else {
-	cat("Choices not supported")
+	cat("Choice not supported")
 	return(NULL)
     }
 
