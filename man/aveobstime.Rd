@@ -12,7 +12,7 @@
 }
 
 \usage{
-    tmp <- aveobstime(time, values, period="month")
+    aveobstime(time, values, period="month")
 }
 
 \arguments{
@@ -22,9 +22,12 @@
 }
 
 \value{
+    \link{list} containing info and data, where data is a
+    \link{data.frame}
 }
 
 \seealso{
+    \link{aveobsdepth}, \link{readhydrography}
 }
 
 \author{

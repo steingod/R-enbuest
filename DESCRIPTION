@@ -1,7 +1,7 @@
 Package: enbuest
-Version: 0.1
-Date: 2009-09-11
-Title: Estimation of surface fluxes and water column heat content
+Version: 0.2
+Date: 2010-02-19
+Title: Estimation of the surface energy budget and water column heat content
 Author: Oystein Godoy <o.godoy@met.no>
 Maintainer: Oystein Godoy <o.godoy@met.no>
 Depends: 

@@ -17,7 +17,7 @@
 # Returns an object of the type returned by readhydrography.
 #
 # NOTES:
-# NA
+# Currently only a weighted average of temperature is returned.
 #
 # BUGS:
 # NA
@@ -29,7 +29,7 @@
 # NA
 #
 # CVS_ID:
-# $Id: aveobsdepth.R,v 1.4 2010-02-17 17:36:24 steingod Exp $
+# $Id: aveobsdepth.R,v 1.5 2010-02-19 12:16:50 steingod Exp $
 #  
 
 aveobsdepth <- function(x,depth,numz=5,method="extract") {
@@ -45,22 +45,6 @@ aveobsdepth <- function(x,depth,numz=5,method="extract") {
 		    salinity=x$data$salinity[x$data$depth==depth]
 		    ))
     } else if (method=="mean") {
-##	t <- list(info=paste(x$info,"Weighted average until depth", depth),
-##		data=data.frame(
-##		    time=x$data$time[x$data$depth<=depth],
-##		    latitude=x$data$latitude[x$data$depth<=depth],
-##		    longitude=x$data$longitude[x$data$depth<=depth],
-##		    depth=x$data$depth[x$data$depth<=depth],
-##		    temperature=x$data$temperature[x$data$depth<=depth],
-##		    salinity=x$data$salinity[x$data$depth<=depth]
-##		    ))
-	#myindex <- factor(paste(format(t$data$time,"%Y%m%d","GMT"),
-	#	    t$data$depth,sep="_"))
-	#mytime <- ISOdatetime(1970,1,1,0,0,0,"GMT")+tapply(t$data$time,myindex,mean,na.rm=T)
-	#mydepth <- 
-	#mytemp <- tapply(t$data$temperature,myindex,mean,na.rm=T)
-	#mypsal <- tapply(t$data$salinity,myindex,mean,na.rm=T)
-
 	# Reduce amount of data to process according to level of
 	# integration
 	t <- x$data[x$data$depth<=depth,] 
@@ -83,33 +67,31 @@ aveobsdepth <- function(x,depth,numz=5,method="extract") {
 		names(mindepth),
 		NA)
 	tmp3 <- tmp2[myindex2 %in% useful,]
-	#tmp2 <- tmp3[do.call(order,tmp3[,c("time","depth")])]
-	#return(tmp2)
-	myindex2 <- format(ISOdate(1970,1,1,0)+tmp3[,"time"],"%Y%m%d","GMT")
+	
+	# Sort matrix for increasing time and depth to prepare weighted
+	# average of temperature in water column per time step
+	tmp2 <- tmp3[order(tmp3[,"time"],tmp3[,"depth"]),]
 
+
+	# Prepare weighted average
+	myindex2 <- format(ISOdate(1970,1,1,0)+tmp2[,"time"],"%Y%m%d","GMT")
 	# Extract to separate function in time...
 	myfun <- function(u) {
 	    intdiff <- (u$temperature[-1]+u$temperature[-nrow(u)])/2
 	    w <- diff(u$depth[u$depth<=depth])/depth
 	    return(weighted.mean(intdiff,w,na.rm=TRUE))
 	}
-
 	# Apply weighted average over depth
-	tmp2 <- by(tmp3,myindex2,myfun)
+	tmp3 <- by(tmp2,myindex2,myfun)
 
 	# Prepare for export
-	mytime <- strptime(names(tmp2),"%Y%m%d","GMT")
-	myvalue <- unlist(tmp2,use.names=F)
+	mytime <- strptime(names(tmp3),"%Y%m%d","GMT")
+	mytemp <- unlist(tmp3,use.names=F)
 
-	return(list(time=mytime,temperature=myvalue))
-
-
-	#t <- x
-	#x <- t$data[do.call(order,t$data[,c("time","depth")]),]
-	tmp <- by(t$data[,c("temperature","depth")], 
-		t$data$time, 
-		function(u) weighted.mean((u$temperature[-1]+u$temperature[-nrow(u)])/2, w=diff(u$depth)/depth, na.rm=TRUE))
-	return(tmp)
+	# Prepare object to return
+	t <- list(info=paste(x$info,
+		    "Weighted depth average over uppermost", depth,"m"),
+		data=data.frame(time=mytime,temperature=mytemp))
     } else {
 	cat("Choices not supported")
 	return(NULL)

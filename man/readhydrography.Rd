@@ -22,11 +22,12 @@
 }
 
 \value{
-    Returns a \link{list} containing two parts, info and data.
+    \link{list} containing info and data, where data is a
+    \link{data.frame}
 }
 
 \seealso{
-    \link{readkdvh}
+    \link{readkdvh}, \link{aveobsdepth}, \link{aveobstime}
 }
 
 \author{

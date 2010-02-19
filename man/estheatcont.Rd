@@ -32,7 +32,7 @@
 }
 
 \seealso{
-    \link{readhydrography}
+    \link{readhydrography}, \link{aveobsdepth}, \link{aveobstime}
 }
 
 \author{
