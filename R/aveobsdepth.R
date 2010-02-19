@@ -29,7 +29,7 @@
 # NA
 #
 # CVS_ID:
-# $Id: aveobsdepth.R,v 1.6 2010-02-19 12:52:36 steingod Exp $
+# $Id: aveobsdepth.R,v 1.7 2010-02-19 14:08:40 steingod Exp $
 #  
 
 aveobsdepth <- function(x,depth,numz=5,method="extract") {
@@ -57,7 +57,8 @@ aveobsdepth <- function(x,depth,numz=5,method="extract") {
 		    c("time","longitude","latitude",
 		    "depth","temperature","salinity")),
 		byrow=T)
-	# Prepare depth averaging within day
+	# Prepare depth averaging within day to ensure that each depth
+	# level is represented by only 1 observation within each day
 	myindex2 <- format((ISOdate(1970,1,1,0)+tmp2[,"time"]),"%Y%m%d","GMT")
 	mindepth <- by(tmp2[,"depth"],myindex2,min)
 	maxdepth <- by(tmp2[,"depth"],myindex2,max)
@@ -70,8 +71,8 @@ aveobsdepth <- function(x,depth,numz=5,method="extract") {
 	
 	# Sort matrix for increasing time and depth to prepare weighted
 	# average of temperature in water column per time step
-	tmp2 <- tmp3[order(tmp3[,"time"],tmp3[,"depth"]),]
-
+	tmp2 <- tmp3[order(format(ISOdate(1970,1,1,0)+tmp3[,"time"],"%Y%m%d","GMT"),tmp3[,"depth"]),]
+	#return(tmp2)
 
 	# Prepare weighted average
 	myindex2 <- format(ISOdate(1970,1,1,0)+tmp2[,"time"],"%Y%m%d","GMT")
