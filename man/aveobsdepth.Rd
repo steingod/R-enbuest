@@ -18,7 +18,7 @@
 
 \arguments{
     \item{x}{An object of the type returned by \link{readhydrography}.}
-    \item{depth}{The dept level to extract or to integarte from surface
+    \item{depth}{The dept level to extract or to integrate from surface
     to.}
     \item{numz}{The number of vertical levels required to perform a
     weighted average within the layer.}
