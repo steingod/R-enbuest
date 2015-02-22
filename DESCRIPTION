@@ -11,3 +11,4 @@ Description: Bulk parameterisations of shortwave, longwave, sensible and
 	latent heat fluxes. Estimates changes in the water column heat content. 
 License: GPL version 2 or newer
 URL: http://www.r-project.org, http://www.met.no
+Encoding: UTF-8

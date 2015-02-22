@@ -4,7 +4,7 @@ plotbsrnradobs <- function() {
 
     # These have only shortwave sensors
     bsrnst <- as.data.frame(matrix(c(
-                    "Ny-Ålesund",00000,78.933,11.950,
+                    "Ny-Ãlesund",00000,78.933,11.950,
                     "Lerwick",00000,60.133,-1.183,
                     "Lindenberg",00000,52.217,14.117,
                     "Cabauw",00000,51.97,4.93,
@@ -16,7 +16,7 @@ plotbsrnradobs <- function() {
 
     # These have both shortwave and longwave sensors
     otherst <- as.data.frame(matrix(c(
-                    "Sodankylä",00000,67.220,26.390,
+                    "SodankylÃ¤",00000,67.220,26.390,
                     "Polarfront",00000,66.0,2.0),
                 byrow=T,nrow=2,ncol=4,
                 dimnames=list(NULL,c("Name","Id","Lat","Lon"))))

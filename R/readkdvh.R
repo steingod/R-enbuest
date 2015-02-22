@@ -24,7 +24,7 @@
 # J. B. Bremnes, METNO/FOU, Original code from Bremnes, modified...
 #
 # MODIFIED:
-# Øystein Godøy, METNO/FOU, 10.09.2009
+# Ã˜ystein GodÃ¸y, METNO/FOU, 10.09.2009
 #
 # CVS_ID:
 # $Id: readkdvh.R,v 1.1 2010-02-09 10:51:26 steingod Exp $

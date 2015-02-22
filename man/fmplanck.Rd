@@ -40,7 +40,7 @@
 }
 
 \author{
-    Øystein Godøy (\email{o.godoy@met.no})
+    Ãystein GodÃ¸y (\email{o.godoy@met.no})
 }
 
 \examples{

@@ -11,7 +11,7 @@
 #
 # AUTHOR:
 # Oystein Godoy, DNMI/FoU, 02.09.1997
-# Øystein Godøy, METNO/FOU, 2012-03-18 
+# Ãystein GodÃ¸y, METNO/FOU, 2012-03-18 
 #
 
 fmplanck <- function(wavelen, temp, p = T, r = F, ...) {
@@ -28,7 +28,7 @@ fmplanck <- function(wavelen, temp, p = T, r = F, ...) {
     rad <- ((c1 * (wavelen^(-5.)))/(exp((c2)/(wavelen * temp)) - 1.))
     if(p == T) {
         plot(wavelen/1e-06, rad * 1e-06 * 1e-07, type = "l", xlab = 
-                "micrometer", ylab = "intensity (W/m²um⁻¹sr⁻¹)*10⁷",...
+                "micrometer", ylab = "intensity (W/mÂ²umâ»Â¹srâ»Â¹)*10â·",...
             )
         title(paste("Planck function output for",temp,"K"))
     }

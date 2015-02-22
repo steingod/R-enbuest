@@ -4,13 +4,13 @@ plotnorwradobs <- function() {
 
     # These have only shortwave sensors
     bioforskst <- as.data.frame(matrix(c(
-                    "Tjøtta",76530,65.83,12.43,
-                    "Vågønes",82260,67.28,14.47,
+                    "TjÃ¸tta",76530,65.83,12.43,
+                    "VÃ¥gÃ¸nes",82260,67.28,14.47,
                     "Holt",90400,69.67,18.93,
                     "Apelsvoll",11500,60.70,10.87,
-                    "Løken",23500,61.12,9.07,
+                    "LÃ¸ken",23500,61.12,9.07,
                     "Landvik",38140,58.33,8.52,
-                    "Særheim",44300,58.78,5.68,
+                    "SÃ¦rheim",44300,58.78,5.68,
                     "Fureneset",56420,61.30,5.05,
                     "Kvithamar",69150,63.50,10.87),
                 byrow=T,nrow=9,ncol=4,
@@ -20,7 +20,7 @@ plotnorwradobs <- function() {
     metnost <- as.data.frame(matrix(c(
                     "Hopen",00000,76.3,24.04,
                     "Jan Mayen",00000,70.933333,-8.6666667,
-                    "Bjørnøya",00000,74.5166667,19.01666667),
+                    "BjÃ¸rnÃ¸ya",00000,74.5166667,19.01666667),
                 byrow=T,nrow=3,ncol=4,
                 dimnames=list(NULL,c("Name","Id","Lat","Lon"))))
 

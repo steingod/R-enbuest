@@ -23,7 +23,7 @@
 # NA
 #
 # AUTHOR:
-# Øystein Godøy, METNO/FOU, 09.02.2010 
+# Ã˜ystein GodÃ¸y, METNO/FOU, 09.02.2010 
 #
 # MODIFIED:
 # NA
