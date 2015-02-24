@@ -13,9 +13,7 @@
 }
 
 \usage{
-    listhdvhst(fields=c("ST_NAME","STNR","WMO_NO","UTM_E","UTM_N",
-	"LON_DEC","LAT_DEC","AMSL"),
-	period=NULL, type=NULL, dep=NULL, print.url=FALSE)
+    listhdvhst(fields=c("ST_NAME","STNR","WMO_NO","UTM_E","UTM_N", "LON_DEC","LAT_DEC","AMSL"), period=NULL, type=NULL, dep=NULL, print.url=FALSE)
 }
 
 \arguments{
