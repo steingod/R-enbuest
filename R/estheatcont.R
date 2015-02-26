@@ -89,7 +89,6 @@ estheatcont <- function(x, integrationdepth=500) {
     tmp1 <- rownames(tmp[tmp1,])
     tmp$interp <- tmp$temperature
     tmp[tmp1,"interp"] <- tmp2[tmp1,"temperature"]
-    return(tmp)
 
     # Estimate the difference in heat content between two consequtive time
     # steps (monthly means). Based on monthly means.
