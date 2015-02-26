@@ -68,24 +68,32 @@ estheatcont <- function(x, integrationdepth=500) {
     # means for the other years, not the previous and subsequent months
     # within the year.
 
-    # Remember that early data are lacking NA insertions for missing
-    # observations...
+    # Check for missing months (not represented by NAs)
+    tmp1 <- strftime(seq(min(tmp$time),max(tmp$time),by="month"),"%Y%m")
+    tmp1 <- tmp1[tmp1 %in% rownames(tmp) == F]
+    tmp1 <- data.frame(time=strptime(paste(tmp1,"15",sep=""),"%Y%m%d"),temperature=NA)
+    tmp <- rbind(tmp,tmp1)
+    tmp <- tmp[order(tmp$time),]
+    rownames(tmp) <- strftime(tmp$time,"%Y%m")
+
+    # Do the monthly interpolation
     tmp$mon <- strftime(tmp$time,"%m")
     tmp1 <- split(tmp,tmp$mon)
     tmp2 <- lapply(tmp1,function(u) approx(as.POSIXct(u$time),
                u$temperature,
-               xout=as.POSIXct(u$time[is.nan(u$temperature)|is.na(u$temperature)])))
+               xout=as.POSIXct(u$time[is.nan(u$temperature)|is.na(u$temperature)]),ties="ordered",rule=2))
     tmp2 <- do.call("rbind",lapply(tmp2,as.data.frame))
-    names(tmp2) <- c("time","temperature")
+    colnames(tmp2) <- c("time","temperature")
     rownames(tmp2) <- strftime(tmp2$time,"%Y%m")
-    tmp1 <- rownames(which(is.nan(tmp$temperature),arr.ind=T))
+    tmp1 <- which(is.nan(tmp$temperature),arr.ind=T)
+    tmp1 <- rownames(tmp[tmp1,])
     tmp$interp <- tmp$temperature
     tmp[tmp1,"interp"] <- tmp2[tmp1,"temperature"]
     return(tmp)
 
     # Estimate the difference in heat content between two consequtive time
     # steps (monthly means). Based on monthly means.
-    deltat <- diff(tmp$temperature,1,2)
+    deltat <- c(NA,diff(tmp$temperature,1,2),NA)
     delta <- cp*rho*integrationdepth*deltat
     tmp$deltaq <- delta/(30.*24*3600)
 

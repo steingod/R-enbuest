@@ -8,13 +8,15 @@
 
 \description{
     The mean temperature of a water column is estimated using a weighted
-    mean. This is transformed into the heat content of the water column
-    and subsequently the change in heat content over time is estimated.
-    The heat content is estimated for the uppermost 500m of the water
-    column.
+    mean over a integration depth. This is transformed into the heat
+    content of the water column and subsequently the change in heat
+    content over time is estimated.  The heat content is by default
+    estimated for the uppermost 500m of the water column.
 
-    Standard depths of 0, 10, 25, 50, 75, 100, 150, 200, 300, 400 and 500
-    meter are used. Subsequent version will include other depths.
+    Currently standard depths are not used, but the existing depths are
+    used in the weighted average for each profile. From these averaged
+    profiles a monthly mean is constructed. Missing months within the time
+    period spanned are interpolated using \link{approx}.
 }
 
 \usage{
@@ -28,7 +30,9 @@
 }
 
 \value{
-    Returns a \link{list}
+    Returns a \link{data.frame} with averaged temperature profiles for
+    each month as well as interpolated values and the actual heat content
+    change.
 }
 
 \seealso{
