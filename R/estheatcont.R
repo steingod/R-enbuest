@@ -41,22 +41,15 @@ estheatcont <- function(x, integrationdepth=500) {
 
     # Estimate mean values between depths and weight these according to
     # the number of meters the observations represent.
-    #
-    # Originally the mean value between two and two depths were created by
-    # weighting against the number of meters these observations represent.
-    # Then these weighted mean values were summarised and divided by the
-    # sum of weights to find the weighted mean value for the water column.
-    #
-    # Mean temperatures are currently not weighted, must be redone...
-    # Should split in two tasks, first create weighted mean for each time
-    # step, then create monthly means...
 
     # Discard observations outside the integration depth
     mydata <- x[x$depth <= integrationdepth,]
 
+    # Potentially interpolate to standard depths prior to further
+    # processing, discard profiles with too few observations...
+
     # Do the vertical weighted mean
-    myindex1 <- as.integer(format(mydata$time,"%Y%j"))
-    mydata$timeid <- myindex1
+    mydata$timeid <- as.integer(format(mydata$time,"%Y%j"))
     tmp <- split(mydata,mydata$timeid)
     tmp <- lapply(tmp,function(u) cbind(u, w=weightest(u$depth)))
     tmp <- lapply(tmp, function(u) weighted.mean(u$temperature,u$w))
@@ -70,6 +63,24 @@ estheatcont <- function(x, integrationdepth=500) {
     tmp <- data.frame(
             temperature = tapply(tmp$temperature,tmp$timeid,mean,na.rm=T))
     tmp$time <- strptime(paste(rownames(tmp),"15",sep=""),"%Y%m%d",tz="GMT")
+
+    # Interpolate missing months. Interpolation is done using monhtly
+    # means for the other years, not the previous and subsequent months
+    # within the year.
+
+    # Remember that early data are lacking NA insertions for missing
+    # observations...
+    tmp$mon <- strftime(tmp$time,"%m")
+    tmp1 <- split(tmp,tmp$mon)
+    tmp2 <- lapply(tmp1,function(u) approx(as.POSIXct(u$time),
+               u$temperature,
+               xout=as.POSIXct(u$time[is.nan(u$temperature)|is.na(u$temperature)])))
+    tmp2 <- do.call("rbind",lapply(tmp2,as.data.frame))
+    names(tmp2) <- c("time","temperature")
+    rownames(tmp2) <- strftime(tmp2$time,"%Y%m")
+    tmp1 <- rownames(which(is.nan(tmp$temperature),arr.ind=T))
+    tmp$interp <- tmp$temperature
+    tmp[tmp1,"interp"] <- tmp2[tmp1,"temperature"]
     return(tmp)
 
     # Estimate the difference in heat content between two consequtive time
