@@ -27,11 +27,9 @@
 # Øystein Godøy, METNO/FOU, 10.09.2009 
 #
 # MODIFIED:
-# NA
+# Øystein Godøy, METNO/FOU, 2013-01-15
+# Øystein Godøy, METNO/FOU, 2015-02-27 
 #
-# CVS_ID:
-# $Id: estheatcont.R,v 1.1 2010-02-09 10:51:26 steingod Exp $
-#  
 estheatcont <- function(x, integrationdepth=500) {
 
     # Some constants for heat content estimation (density and heat
@@ -39,18 +37,47 @@ estheatcont <- function(x, integrationdepth=500) {
     rho <- 1.e3
     cp <- 4218
 
-    # Estimate mean values between depths and weight these according to
-    # the number of meters the observations represent.
-
     # Discard observations outside the integration depth
-    mydata <- x[x$depth <= integrationdepth,]
+    # Need to check this carefully as sometimes there is a gap between 200
+    # and e.g. 800 m. The hardcoded values has to be revisited. This
+    # filtering should probably be done after interpolation to standard
+    # levels...
+    mydata <- x[x$depth <= (800),]
 
-    # Potentially interpolate to standard depths prior to further
-    # processing, discard profiles with too few observations...
-
-    # Do the vertical weighted mean
+    # Create list, assuming one profile per day
     mydata$timeid <- as.integer(format(mydata$time,"%Y%j"))
     tmp <- split(mydata,mydata$timeid)
+
+    # Check that the profiles contain enough levels to properly estimate
+    # water column temperature. Standard levels are:
+    # 0, 10, 25, 50, 75, 100, 150, 200, 300, 400, 500 etc.
+    # Check on profile depth is hardcoded as no passing of arguments is
+    # allowed.
+    tmp <- lapply(tmp,function(u) if (max(u$depth) > 500) u else NULL)
+    tmp <- tmp[!sapply(tmp,is.null)]
+    tmp <- lapply(tmp,function(u) if (length(u$depth) > 4) u else NULL)
+    tmp <- data.frame(do.call("rbind",tmp))
+    tmp <- split(tmp,tmp$timeid)
+    stdlev <- c(0, 10, 25, 50, 75, 100, 150, 200, 300, 400, 500)
+    
+    # Interpolation to standard levels... 
+    # Not used currently...
+    tmp1 <- lapply(tmp, function(u) approx(u$depth,u$temperature,xout=c(0,
+                                                                       10,
+                                                                       25,
+                                                                       50,
+                                                                       75,
+                                                                       100,
+                                                                       150,
+                                                                       200,
+                                                                       300,
+                                                                       500)))
+
+    # Discard profiles with too few observations... (???)
+
+    # Do the vertical weighted mean
+    # Estimate mean values between depths and weight these according to
+    # the number of meters the observations represent.
     tmp <- lapply(tmp,function(u) cbind(u, w=weightest(u$depth)))
     tmp <- lapply(tmp, function(u) weighted.mean(u$temperature,u$w))
     tmp <- data.frame(do.call("rbind",tmp))
@@ -68,7 +95,8 @@ estheatcont <- function(x, integrationdepth=500) {
     # means for the other years, not the previous and subsequent months
     # within the year.
 
-    # Check for missing months (not represented by NAs)
+    # Check for missing months (not represented by NAs) and add NAs for
+    # these
     tmp1 <- strftime(seq(min(tmp$time),max(tmp$time),by="month"),"%Y%m")
     tmp1 <- tmp1[tmp1 %in% rownames(tmp) == F]
     tmp1 <- data.frame(time=strptime(paste(tmp1,"15",sep=""),"%Y%m%d"),temperature=NA)

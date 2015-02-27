@@ -28,9 +28,6 @@
 # MODIFIED:
 # NA
 #
-# CVS_ID:
-# $Id: readhydrography.R,v 1.1 2010-02-09 10:51:26 steingod Exp $
-#
 
 readhydrography <- function(file) {
     t <- read.table(file=file,col.names=c("Date","Time","Time_Zone","Latitude","Longitude","Depth","Temperature","Salinity"),na.strings="-999.00")
